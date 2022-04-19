@@ -33,11 +33,9 @@ const main = async () => {
     // waveCount = await waveContract.getTotalWaves();
 
     /* Let's try two waves now */
-    const waveTxn = await waveContract.wave("This is wave #1");
+    const waveTxn = await waveContract.wave("0x94806e9B50075b9c87F24A71138DC097C83dE6cE", 1, "This is wave #1", "test");
     await waveTxn.wait();
-
-    const waveTxn2 = await waveContract.wave("This is wave #2");
-    await waveTxn2.wait();
+    
     
     /* Get contract balance and see what happened! */
     contractBalance = await hre.ethers.provider.getBalance(waveContract.address);

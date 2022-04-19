@@ -17,18 +17,16 @@ contract WavePortal {
     // bool[] boolArray;
     // address[] addressArray;
 
-    event NewWave(address indexed from, uint256 timestamp, string message);
+    event NewWave(address indexed sender, address indexed receiver, uint256 timestamp, string message, string keyword, uint amount);
 
     // A struct is basically a custom datatype where we can customize what we want to hold inside it
     struct Wave {
-        address waver; // The addressof the user who waved
-        string message; // The message the user sent
+        address sender; // The addressof the user who waved
+        address receiver;
         uint256 timestamp; // The timestamp when the user waved
-    }
-
-    struct ContactInfo {
-        string name;
-        string message;
+        string message; // The message the user sent
+        string keyword;
+        uint256 amount;
     }
 
     /*
@@ -39,7 +37,6 @@ contract WavePortal {
 
     // mapping
     mapping(address => uint256) public lastWavedAt;
-    // mapping(address => string[]) addressMap;
 
     constructor () payable{
         console.log("Yo yo, I am a contract and I am smart");
@@ -47,7 +44,7 @@ contract WavePortal {
         seed = (block.timestamp + block.difficulty) % 100;
     }
 
-    function wave(string memory _message) public {
+    function wave(address payable receiver, string memory _message, string memory _keyword, uint amount) public {
         /*
          * We need to make sure the current timestamp is at least 15-minutes bigger than the last timestamp we stored
          */
@@ -67,7 +64,7 @@ contract WavePortal {
         /*
          * This is where I actually store the wave data in the array.
          */
-        waves.push(Wave(msg.sender, _message, block.timestamp));
+        waves.push(Wave(msg.sender, receiver, block.timestamp,_message, _keyword, amount));
 
         /* Generate a new seed for the next user that sends a wave */
         seed = (block.timestamp + block.difficulty) % 100;
@@ -85,7 +82,6 @@ contract WavePortal {
             require(success,"FAiled to withdraw money from contract");
 
         }
-
     }
 
     /*
